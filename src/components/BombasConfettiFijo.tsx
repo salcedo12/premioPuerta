@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Confetti from "react-confetti";
+import LucesReflejo from "./LucesReflejo";
 
 const NUM_BOMBAS = 60;
 
@@ -80,7 +81,9 @@ const BombasYConfettiSubiendo: React.FC = () => {
       zIndex: 13000,
       overflow: "hidden"
     }}>
-      {/* Confeti infinito cayendo */}
+       <LucesReflejo />
+          <LucesReflejo />
+   
       <Confetti
         width={width}
         height={height}
