@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import LucesReflejo from "./LucesReflejo";
 
-const NUM_BOMBAS = 60;
-
+const NUM_BOMBAS = 40;
 function getBombasSubiendo(width: number, height: number) {
-  // Área libre central para el modal
+ 
   const modalWidth = width * 0.38;
   const modalHeight = height * 0.29;
   const modalLeft = (width - modalWidth) / 2;
@@ -24,7 +23,7 @@ function getBombasSubiendo(width: number, height: number) {
   let intentos = 0;
   while (bombasArr.length < NUM_BOMBAS && intentos < NUM_BOMBAS * 9) {
     const x = Math.random() * width;
-    const y = Math.random() * 80 + height + 40; // Inicia cerca del bottom
+    const y = Math.random() * 80 + height + 40; 
     if (fueraDelModal(x, y)) {
       bombasArr.push({
         left: x,
@@ -54,7 +53,7 @@ const BombasYConfettiSubiendo: React.FC = () => {
           let newRotation = bomba.rotation + bomba.speed * 1.3;
           let newLeft = bomba.left;
           if (newTop < -bomba.size - 14) {
-            newTop = Math.random() * 80 + height + 40; // Reinicia abajo
+            newTop = Math.random() * 80 + height + 40; 
             newLeft = Math.random() * width;
           }
           return {
@@ -93,7 +92,7 @@ const BombasYConfettiSubiendo: React.FC = () => {
         initialVelocityY={3}
         colors={["#FFD700", "#212121", "#fff36b"]}
       />
-      {/* Bombas animadas subiendo */}
+     
       {bombas.map((bomba, idx) => (
         <img
           key={idx}

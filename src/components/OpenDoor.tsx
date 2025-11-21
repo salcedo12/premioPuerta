@@ -31,8 +31,8 @@ function AlertModal({ mensaje, onClose }: { mensaje: string, onClose: () => void
   );
 }
 
-// Nuevo modal de premio: incluye bombas + confeti SVG estáticos
-function PremioModal({ onDescargar, onVer, premio }: PremioModalProps) {
+
+function PremioModal({ onDescargar,  }: PremioModalProps) {
   return ReactDOM.createPortal(
     <div className="premio-modal-portal">
       <div className="modal-portal-overlay"></div>
@@ -53,7 +53,7 @@ function PremioModal({ onDescargar, onVer, premio }: PremioModalProps) {
   );
 }
 
-// Mantén la función de confetti si usas algún disparo extra
+
 function explosionBombasConfetti() {
   confetti({
     particleCount: 140,
@@ -97,7 +97,7 @@ const OpenDoor: React.FC<Props> = ({ usuario }) => {
 
   const navigate = useNavigate();
 
-  // Lógica para efectos, ya no necesitas mostrarBombas ni BombasAnimadasPantalla
+
   useEffect(() => {
     if (mostrarModal && premio === "20 Millones") {
       explosionBombasConfetti();
