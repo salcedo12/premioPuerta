@@ -1,13 +1,4 @@
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-
-  height: 100%;
-  width: 100%;
-  
-}
 .open-door-container {
-
   min-height: 100vh;
   width: 100vw;
   background: url(/public/CLUB.png);
@@ -16,6 +7,7 @@ html, body {
   background-size: cover;
   position: relative;
   top: 0;
+  overflow-x: hidden;
 }
 
 .llaves-y-puerta-layout {
@@ -25,15 +17,6 @@ html, body {
   justify-content: center;
   width: 100%;
   gap: 10px;
-}
-
-.columna-llaves {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 80px;
-  margin: 0 8px;
 }
 
 .puerta-centro-disenio {
@@ -133,52 +116,6 @@ html, body {
   to   { opacity: 1; transform: scale(1);}
 }
 
-.bomba-animada {
-  position: absolute;
-  width: 58px;
-  height: 82px;
-  opacity: 0.93;
-}
-.bomba-animada {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  bottom: -70px;
-  animation: bombaSubeSoloArriba 100.5s cubic-bezier(.32,.86,.25,.66) forwards;
-  opacity: 0.92;
-}
-.bomba-arriba {
-  animation: bombaSubeMulti 100.6s cubic-bezier(.37,.78,.26,.86) forwards;
-}
-.bomba-der {
-  animation: bombaLateralDer 100.5s cubic-bezier(.78,.3,.29,.85) forwards;
-}
-.bomba-izq {
-  animation: bombaLateralIzq 100.5s cubic-bezier(.48,.54,.44,.81) forwards;
-}
-
-@keyframes bombaSubeMulti {
-  0% { opacity: 0.45; transform: scale(0.88) rotate(-15deg);}
-  6% { opacity: 1;}
-  44% { transform: scale(1.15) rotate(14deg);}
-  97% { opacity: 1;}
-  100% { top: 0vh; opacity: 0; filter: blur(7px); transform: scale(0.9) rotate(-12deg);}
-}
-
-@keyframes bombaLateralDer {
-  0% { opacity: 0.45; transform: scale(0.93) rotate(-4deg);}
-  10% { opacity: 1;}
-  77% { transform: scale(1.18) rotate(17deg);}
-  100% { right: -140px; opacity: 0; filter: blur(9px); transform: scale(0.91);}
-}
-
-@keyframes bombaLateralIzq {
-  0% { opacity: 0.49; transform: scale(0.98) rotate(-20deg);}
-  12% { opacity: 1;}
-  82% { transform: scale(1.09) rotate(9deg);}
-  100% { left: -110px; opacity: 0; filter: blur(6px); transform: scale(0.94);}
-}
-
 
  
 .contenedor-disenio-llaves-puerta {
@@ -186,8 +123,6 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  
 }
 
 
@@ -212,7 +147,7 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 130px;
+  gap: 70px;
   margin: 0;
   padding: 0;
 }
@@ -223,13 +158,43 @@ html, body {
   justify-content: center;
   margin: 0;
   padding: 0;
-   width: 350px;
-  height: 540px;
+   width: 750px;
+  height: 740px;
 }
 
+
+.puerta-animada {
+  
+  width: 750px;
+  height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform-origin: left center; 
+  transform-style: preserve-3d;
+  transition: transform 1.3s cubic-bezier(.2,.9,.3,1); 
+  will-change: transform;
+  backface-visibility: hidden;
+  pointer-events: none; 
+}
+
+.puerta-animada.open {
+  transform: rotateY(-75deg);
+}
+
+.puerta-animada .puerta-img-disenio {
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 0 0 0 transparent;
+  background: transparent;
+  pointer-events: auto;
+}
+
+
 .puerta-img-disenio {
-  width: 520px;
-  height: 540px;
+  width: 750px;
+  height: 800px;
   object-fit: contain;
   border-radius: 12px;
   box-shadow: 0 0 0 0 transparent;
@@ -242,18 +207,25 @@ html, body {
 }
 
 .llave-disenio {
-  width: 80px;
-  height: auto;
-  max-height: 78px;
-  object-fit: contain;
-  filter: drop-shadow(0 5px 7px #00000066);
-  margin: 0;
-  transition: filter 0.1s, transform 0.12s;
-  border-radius: 18px;             
-  background-color: rgba(30, 14, 0, 0.78);;
-  box-shadow: 0 0 14px 7px #000C;   
-  padding: 12px;                    
+    width: 150px;
+    height: 150px;
+    animation: girar 12s linear infinite, flotar 4s ease-in-out infinite;
+    transform-style: preserve-3d;                    
   
+}
+
+@keyframes girar {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0) rotateY(0deg); }
+    50% { transform: translateY(-8px) rotateY(180deg); }
 }
 
 .llave-opaque {
@@ -295,16 +267,29 @@ html, body {
 .premio-modal-portal {
   position: fixed;
   inset: 0;
-  z-index: 99999;
-  pointer-events: none;
+  z-index: 99999; 
+  pointer-events: none; 
 }
-.modal-portal-overlay {
-  position: fixed;
+
+
+.confetti-bg {
+  position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(30, 30, 30, 0.92) 100%, rgba(223, 222, 213, 0.18) 100%);
-  z-index: 0;
-  pointer-events: none;
+  z-index: 3; 
+  pointer-events: none; 
+  display: block;
 }
+
+
+.modal-portal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(6,6,6,0.44); 
+  backdrop-filter: blur(2px); 
+  pointer-events: auto; 
+}
+
 
 .premio-solo-container {
   position: fixed;
@@ -317,8 +302,8 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  z-index: 1;
-  pointer-events: auto;
+  z-index: 3; 
+  pointer-events: auto; 
 }
 .premio-solo-row {
   display: flex;
@@ -345,16 +330,9 @@ html, body {
   pointer-events: none;
   z-index: 20;
   letter-spacing: 0.04em;
-
-
-
   box-sizing: border-box;
   mix-blend-mode: lighten;
-
-
 }
-
-
 
 .premio-solo-content {
   min-width: 170px;
@@ -395,8 +373,6 @@ html, body {
   background: linear-gradient(90deg, #E4C36C 0%, #946322 100%);
   transform: scale(1.07);
 }
-
-
 
 @media (max-width: 900px) {
   .puerta-img-disenio {
@@ -461,7 +437,6 @@ html, body {
     height: 190px;
   }
   .llaves-y-puerta-layout {
-   
     width: 99vw;
     max-width: 360px;
     justify-content: center;
@@ -471,7 +446,6 @@ html, body {
  .columna-llaves {
     gap: 10vw;
     margin: 0 2vw;
-
   }
   .puerta-img-disenio {
     width: 250px;
@@ -489,7 +463,6 @@ html, body {
  .llave-disenio {
     width: 64px;
     max-height: 64px;
-  
   }
   .mensaje-sin-suerte,
   .mensaje-final-sin-suerte {
@@ -523,4 +496,35 @@ html, body {
     padding: 9px 16px;
     border-radius: 7px;
   }
+}
+
+@media (max-width: 480px) {
+
+  .form-container, 
+  .formulario-meraki, 
+  .contenedor-form, 
+  form {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+      box-sizing: border-box;
+      overflow-x: hidden;
+  }
+
+  /* Inputs */
+  input, select, textarea {
+      width: 100% !important;
+      max-width: 100% !important;
+  }
+
+  /* Evitar márgenes excesivos */
+  .campo-form {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+  }
+}@media (max-width: 480px) {
+    .logo-meraki {
+        width: 220px !important;
+    }
 }

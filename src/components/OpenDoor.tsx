@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
 import "../styles/OpenDoor.css";
 import { generarPDF } from "../components/GenerarPdf";
@@ -7,6 +7,8 @@ import type { Usuario } from "../types";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import BombasConfettiFijo from "./BombasConfettiFijo";
+
+
 const NUM_LLAVES = 8;
 const NUM_PREMIOS = 8;
 
@@ -16,7 +18,6 @@ type PremioModalProps = {
   onDescargar: () => void;
   onVer: () => void;
 };
-
 
 function AlertModal({ mensaje, onClose }: { mensaje: string, onClose: () => void }) {
   return ReactDOM.createPortal(
@@ -32,18 +33,24 @@ function AlertModal({ mensaje, onClose }: { mensaje: string, onClose: () => void
 }
 
 
-function PremioModal({ onDescargar,  }: PremioModalProps) {
+function PremioModal({  onDescargar,  }: PremioModalProps) {
   return ReactDOM.createPortal(
     <div className="premio-modal-portal">
-      <div className="modal-portal-overlay"></div>
-      <BombasConfettiFijo />
-      <div className="premio-solo-container">
+   
+      <div className="confetti-bg" aria-hidden="true">
+        <BombasConfettiFijo />
+      </div>
+
+      <div className="modal-portal-overlay" />
+
+
+      <div className="premio-solo-container" role="dialog" aria-modal="true">
         <div className="premio-solo-row">
           <div className="premio-solo-content">
 
             <div className="botones-premio">
               <button className="boton-descarga" onClick={onDescargar}>Descargar recompensa</button>
-
+           
             </div>
           </div>
         </div>
@@ -52,7 +59,6 @@ function PremioModal({ onDescargar,  }: PremioModalProps) {
     document.body
   );
 }
-
 
 function explosionBombasConfetti() {
   confetti({
@@ -96,12 +102,10 @@ const OpenDoor: React.FC<Props> = ({ usuario }) => {
   const [alertaTexto, setAlertaTexto] = useState("");
 
   const navigate = useNavigate();
+  const puertaRef = useRef<HTMLDivElement | null>(null);
 
-
-  useEffect(() => {
-    if (mostrarModal && premio === "20 Millones") {
-      explosionBombasConfetti();
-    }
+  React.useEffect(() => {
+    if (mostrarModal && premio === "20 Millones") explosionBombasConfetti();
   }, [mostrarModal, premio]);
 
   const premiosIndices = useMemo(() => {
@@ -115,46 +119,75 @@ const OpenDoor: React.FC<Props> = ({ usuario }) => {
     return arr;
   }, [premiosIndices]);
 
-  const handleAbrirLlave = (i: number) => {
+  const waitForDoorToOpen = (): Promise<void> => {
+    return new Promise((resolve) => {
+      const el = puertaRef.current;
+      if (!el) {
+        setTimeout(resolve, 1400);
+        return;
+      }
+      let finished = false;
+      const onEnd = (e: TransitionEvent) => {
+        if (e.propertyName === "transform") {
+          finished = true;
+          resolve();
+        }
+      };
+      el.addEventListener("transitionend", onEnd as EventListener, { once: true });
+      setTimeout(() => {
+        if (!finished) resolve();
+      }, 2000);
+    });
+  };
+
+  const handleAbrirLlave = async (i: number) => {
     if (llavesEscogidas.includes(i) || intentos >= 2 || puertaAbierta) return;
+
+    const intentoActual = intentos;
     setLlaveAbierta(i);
     setPremio(premiosPorLlave[i]);
     setPuertaAbierta(true);
     setIntentos(prev => prev + 1);
     setLlavesEscogidas(prev => [...prev, i]);
-    setTimeout(async () => {
-      if (!usuario) {
-        alert("No hay datos de usuario, no se puede guardar el resultado.");
-        return;
+
+    await waitForDoorToOpen();
+
+    if (!usuario) {
+      alert("No hay datos de usuario, no se puede guardar el resultado.");
+      setPuertaAbierta(false);
+      setLlaveAbierta(null);
+      setPremio(null);
+      return;
+    }
+
+    if (premiosPorLlave[i] === "20 Millones") {
+      const nuevoUUID = crypto.randomUUID();
+      setUuidPremio(nuevoUUID);
+      await actualizarPremio(usuario.documento, "20 Millones", nuevoUUID);
+      await generarPDF(usuario, "20 Millones", nuevoUUID);
+      setMostrarModal(true);
+    } else {
+      setLlavesFallidas((prev) => [...prev, i]);
+      if (intentoActual === 0) {
+        setAlertaTexto("¡No tuviste suerte! Intenta con otra llave.");
+        setAlertaVisible(true);
+
+        setTimeout(() => {
+          setPuertaAbierta(false);
+          setLlaveAbierta(null);
+          setPremio(null);
+        }, 600);
       }
-      if (premiosPorLlave[i] === "20 Millones") {
+      if (intentoActual === 1) {
+        setAlertaTexto("No tuviste suerte, ¡gracias por participar!");
+        setAlertaVisible(true);
         const nuevoUUID = crypto.randomUUID();
         setUuidPremio(nuevoUUID);
-        await actualizarPremio(usuario.documento, "20 Millones", nuevoUUID);
-        await generarPDF(usuario, "20 Millones", nuevoUUID);
-        setMostrarModal(true);
-      } else {
-        setLlavesFallidas((prev) => [...prev, i]);
-        if (intentos === 0) {
-          setAlertaTexto("¡No tuviste suerte! Intenta con otra llave.");
-          setAlertaVisible(true);
-          setTimeout(() => {
-            setPuertaAbierta(false);
-            setLlaveAbierta(null);
-            setPremio(null);
-          }, 1800);
-        }
-        if (intentos === 1) {
-          setAlertaTexto("No tuviste suerte, ¡gracias por participar!");
-          setAlertaVisible(true);
-          const nuevoUUID = crypto.randomUUID();
-          setUuidPremio(nuevoUUID);
-          await actualizarPremio(usuario.documento, "No ganó nada", nuevoUUID);
-          await generarPDF(usuario, "No ganó nada", nuevoUUID);
-        }
+        await actualizarPremio(usuario.documento, "No ganó nada", nuevoUUID);
+        await generarPDF(usuario, "No ganó nada", nuevoUUID);
       }
-    }, 1800);
-  }
+    }
+  };
 
   const handleDescargarRecompensa = async () => {
     if (!usuario) { alert("No hay datos de usuario"); return; }
@@ -174,23 +207,34 @@ const OpenDoor: React.FC<Props> = ({ usuario }) => {
     <div className="llaves-y-puerta-layout">
       <div className="columna-llaves columna-izquierda">
         {[0, 1, 2].map(i =>
-          <div className={`llave-img${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
-              onClick={() => handleAbrirLlave(i)}
-              style={{position: "relative"}} key={i}>
-            <img src="/llavesV.png" alt="Llave" className="llave-disenio" />
+          <div
+            className={`llave-img${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
+            onClick={() => handleAbrirLlave(i)}
+            style={{ position: "relative" }} key={i}>
+            <img src="/llaves.png" alt="Llave" className="llave-disenio" />
             {llavesFallidas.includes(i) && <span className="x-falla-llave">×</span>}
           </div>
         )}
       </div>
+
       <div className="puerta-centro-disenio">
-        <img src="/PUERTA1.png" className="puerta-img-disenio" alt="Puerta" />
+        <div
+          ref={puertaRef}
+          className={`puerta-animada ${puertaAbierta ? "open" : ""}`}
+          aria-hidden={false}
+        >
+        
+          <img src="/PUERTA1.png" className="puerta-img-disenio" alt="Puerta" />
+        </div>
       </div>
+
       <div className="columna-llaves columna-derecha">
         {[3, 4, 5].map(i =>
-          <div className={`llave-img${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
-              onClick={() => handleAbrirLlave(i)}
-              style={{position: "relative"}} key={i}>
-            <img src="/llavesV.png" alt="Llave" className="llave-disenio llave-sombra" />
+          <div
+            className={`llave-img${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
+            onClick={() => handleAbrirLlave(i)}
+            style={{ position: "relative" }} key={i}>
+            <img src="/llaves.png" alt="Llave" className="llave-disenio llave-sombra" />
             {llavesFallidas.includes(i) && <span className="x-falla-llave">×</span>}
           </div>
         )}
@@ -201,9 +245,10 @@ const OpenDoor: React.FC<Props> = ({ usuario }) => {
   const llavesArribaRender = (
     <div className="fila-llaves fila-superior">
       {[6, 7].map(i =>
-        <div className={`llave-img${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
-             onClick={() => handleAbrirLlave(i)}
-             style={{position: "relative"}} key={i}>
+        <div
+          className={`llave-img${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
+          onClick={() => handleAbrirLlave(i)}
+          style={{ position: "relative" }} key={i}>
           <img src="/llaves.png" alt="Llave" className="llave-disenio" />
           {llavesFallidas.includes(i) && <span className="x-falla-llave">×</span>}
         </div>
@@ -221,13 +266,16 @@ const OpenDoor: React.FC<Props> = ({ usuario }) => {
           Si aciertas, <b>¡ganas un bono de descuento exclusivo para invertir en tu terreno campestre con Meraki!</b>
         </div>
       </div>
+
       <div className="contenedor-disenio-llaves-puerta">
         {llavesArribaRender}
         {llavesRender}
       </div>
+
       {alertaVisible && (
         <AlertModal mensaje={alertaTexto} onClose={() => setAlertaVisible(false)} />
       )}
+
       {mostrarModal && (
         <PremioModal
           premio={premio ?? ""}
