@@ -1,0 +1,201 @@
+/* CONTENEDOR PRINCIPAL - CENTRADO SIEMPRE */
+.page-center {
+  min-height: 100vh;
+  width: 100vw;
+  background: #141207;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* <- ¡esto centra verticalmente! */
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.formulario-contenedor {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 60px;
+  padding-bottom: 30px;
+}
+
+.form-info-text,
+.formulario {
+  width: 100%;
+  max-width: 660px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #ffd70044;
+  padding: 22px 32px;
+  box-sizing: border-box;
+  color: #ffd954;
+  margin-bottom: 24px;
+}
+
+.form-info-text h2 {
+  font-size: 1.5rem;
+  color: #FFD700;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.form-info-text ul {
+  padding-left: 18px;
+  margin: 10px 0 15px 0;
+}
+
+.form-info-text li {
+  margin-bottom: 4px;
+}
+
+/* LOGO CENTRADO */
+.form-logo {
+  display: block;
+  margin: 0 auto 16px auto;
+  width: 180px;
+  max-width: 90vw;
+}
+
+/* FORMULARIO */
+.formulario {
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid gold;
+  color: white;
+  padding: 25px 32px;
+  margin-bottom: 24px;
+}
+
+.inputs-flex {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.inputs-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-width: 160px;
+  max-width: 300px;
+}
+
+.campo label {
+  display: block;
+  color: #FFD700;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.campo input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #937017;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  font-size: 1rem;
+}
+
+button {
+  background: linear-gradient(90deg,#FFD700 0%,#b8963b 100%);
+  color: #000;
+  border: none;
+  border-radius: 13px;
+  padding: 13px 28px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 16px;
+}
+
+button:hover {
+  background: linear-gradient(90deg, #ffe082, #e2c66b);
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background: #555;
+  cursor: not-allowed;
+  color: #bbb;
+}
+
+.error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid #ff6b6b;
+  padding: 8px;
+  border-radius: 8px;
+  margin-top: 1.2rem;
+  font-size: 0.98rem;
+  text-align: center;
+}
+
+/* RESPONSIVE: Espaciado y tamaño correcto en mobiles, tablets, portátiles pequeños */
+@media (max-width: 950px) {
+  .form-info-text,
+  .formulario {
+    max-width: 95vw;
+    padding-left: 6vw;
+    padding-right: 6vw;
+    font-size: 1.06rem;
+  }
+  .form-logo { width: 130px; }
+}
+
+@media (max-width: 700px) {
+  .form-info-text,
+  .formulario {
+    max-width: 99vw;
+    padding: 13px 9px;
+    border-radius: 9px;
+    font-size: 0.98rem;
+  }
+  .form-logo { width: 80px; }
+  .formulario-contenedor {
+    padding-top: 14vw;
+    padding-bottom: 7vw;
+  }
+  .inputs-flex {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .inputs-col {
+    max-width: 98vw;
+    min-width: 90px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 440px) {
+  .form-info-text,
+  .formulario {
+    font-size: 0.93rem;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 7px;
+  }
+  .form-logo { width: 48px; }
+}
+
+/* Opcional: En 4K o pantallas ultrawide, nunca crece demasiado */
+@media (min-width: 1920px) {
+  .form-info-text,
+  .formulario {
+    max-width: 720px;
+  }
+}
+
+/* Si tienes una sección logo extra, centra todo vertical/horizontal */
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
