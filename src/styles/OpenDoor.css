@@ -170,13 +170,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   transform-origin: left center; 
   transform-style: preserve-3d;
   transition: transform 1.3s cubic-bezier(.2,.9,.3,1); 
   will-change: transform;
   backface-visibility: hidden;
-  pointer-events: none; 
+ 
 }
 
 .puerta-animada.open {
@@ -188,7 +187,7 @@
   border-radius: 12px;
   box-shadow: 0 0 0 0 transparent;
   background: transparent;
-  pointer-events: auto;
+  
 }
 
 
@@ -207,6 +206,9 @@
 }
 
 .llave-disenio {
+    position: relative;
+      z-index: 999999 !important;
+  pointer-events: auto !important;
     width: 150px;
     height: 150px;
     animation: girar 12s linear infinite, flotar 4s ease-in-out infinite;
@@ -512,19 +514,22 @@
       overflow-x: hidden;
   }
 
-  /* Inputs */
+
   input, select, textarea {
       width: 100% !important;
       max-width: 100% !important;
   }
 
-  /* Evitar márgenes excesivos */
+
   .campo-form {
       margin-left: 0 !important;
       margin-right: 0 !important;
   }
-}@media (max-width: 480px) {
-    .logo-meraki {
-        width: 220px !important;
+   .logo-meraki {
+        width: 200px !important;
     }
+
+  
+
+   
 }
