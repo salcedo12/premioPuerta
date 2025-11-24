@@ -207,7 +207,6 @@
 
 .llave-disenio {
     position: relative;
-      z-index: 999999 !important;
   pointer-events: auto !important;
     width: 150px;
     height: 150px;
@@ -377,6 +376,7 @@
 }
 
 @media (max-width: 900px) {
+
   .puerta-img-disenio {
     width: 340px;
     height: 370px;
@@ -403,6 +403,7 @@
 }
 
 @media (max-width: 600px) {
+ 
   .open-door-container {
     padding-top: 8vw;
     min-height: 100svh;
@@ -450,7 +451,6 @@
     margin: 0 2vw;
   }
   .puerta-img-disenio {
-    width: 250px;
     height: 220px;
     border-radius: 8px;
   }
@@ -530,6 +530,9 @@
     }
 
   
-
+.premio-solo-row {
+  height: 240px;
+  width: 380px;
+}
    
 }
