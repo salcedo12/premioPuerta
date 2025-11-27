@@ -4,7 +4,7 @@ import QRCode from "qrcode";
 import fondo from "../assets/bono.png";
 import type { Usuario } from "../types"
 
-const BASE_URL = "https://premio-puerta.vercel.app/";
+const BASE_URL = "hhttps://premio-puerta.vercel.app";
 
 export async function generarPDF(usuario: Usuario, premio: string, uuidPremio: string) {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
