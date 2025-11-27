@@ -10,7 +10,7 @@ import llave from "../assets/llaves.png";
 import puerta from "../assets/PUERTA1.png"
 
 const NUM_LLAVES = 8;
-const NUM_PREMIOS = 8;
+const NUM_PREMIOS = 2;
 
 interface Props { usuario: Usuario | null; }
 
