@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import LucesReflejo from "./LucesReflejo";
-
+import bombaDorada from "../assets/bomba-gold.png"
+import bombaNegra from "../assets/bomba-black.png"
 const NUM_BOMBAS = 40;
 function getBombasSubiendo(width: number, height: number) {
  
@@ -31,8 +32,7 @@ function getBombasSubiendo(width: number, height: number) {
         size: Math.random() * 22 + 42,
         speed: Math.random() * 1.1 + 0.7,
         rotation: Math.random() * 360,
-        src: Math.random() > 0.47 ? "/bomba-gold.png" : "/bomba-black.png"
-      });
+        src: Math.random() > 0.47 ? bombaDorada : bombaNegra   });
     }
     intentos++;
   }

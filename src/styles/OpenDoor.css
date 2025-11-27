@@ -1,170 +1,63 @@
+
 .open-door-container {
   min-height: 100vh;
   width: 100vw;
-  background: url(/public/CLUB.png);
+  background: url(../assets/CLUB.png);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
-  top: 0;
   overflow-x: hidden;
-}
-
-.llaves-y-puerta-layout {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 10px;
 }
 
-.puerta-centro-disenio {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.open-door-welcome {
- max-width: 980px;
-  margin: 0px auto 24px auto;
-  background: rgba(30, 14, 0, 0.78);
-  padding: 22px 19px 14px 19px;
-  border-radius: 14px;
-  box-shadow: 0 0 46px #d4af3718;
-  text-align: center;
-  border: 1.5px solid #ffd70055;
-  opacity: 0.98;
-  position: relative;
-  z-index: 45; 
-}
-
-.bienvenida-titulo {
-  color: #FFD700;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 13px;
-  letter-spacing: 0.04em;
-  text-shadow: 0 2px 22px #000, 0 0 4px #ffe08244;
-}
-
-.bienvenida-texto {
-  color: #ffe082;
-  font-size: 1.22rem;
-  line-height: 1.49;
-  font-family: 'Nunito', 'Arial', sans-serif;
-}
-
-@media (max-width: 600px) {
-  .open-door-welcome {
-    margin: 13px auto 9px auto;
-    max-width: 98vw;
-    padding: 9vw 3vw 3vw 3vw;
-    border-radius: 9px;
-    font-size: 0.98rem;
-  }
-  .bienvenida-titulo { font-size: 1.02rem; }
-}
-.open-door-alert-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 99000;
-  pointer-events: all;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.open-door-alert-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(10,8,2,0.48);
-  z-index: 0;
-  cursor: pointer;
-}
-.open-door-alert-box {
-  z-index: 1;
-  background: #262011;
-  border: 2.2px solid #ffd700AA;
-  border-radius: 18px;
-  box-shadow: 0 0 44px #FFD70060;
-  min-width: 312px;
-  max-width: 90vw;
-  padding: 32px 30px 20px 30px;
-  text-align: center;
-  position: relative;
-  animation: fadeInModalScale .3s;
-}
-.open-door-alert-content {
-  color: #FFD700;
-  font-size: 1.22rem;
-  margin-bottom: 22px;
-  font-weight: bold;
-  line-height: 1.42;
-}
-.open-door-alert-btn {
-  background: linear-gradient(90deg,#FFD700 0%,#b8963b 100%);
-  color: #222; border: none; border-radius: 12px; font-weight: 700;
-  font-size: 1.08rem;
-  padding: 12px 32px;
-  cursor: pointer;
-  box-shadow: 0 2px 18px #FFD70044;
-  transition: transform 0.11s;
-}
-.open-door-alert-btn:hover { transform: scale(1.09); }
-
-@keyframes fadeInModalScale {
-  from { opacity: 0; transform: scale(.82);}
-  to   { opacity: 1; transform: scale(1);}
-}
-
-
- 
 .contenedor-disenio-llaves-puerta {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 
 .fila-llaves {
   display: flex;
-  justify-content: start;
-  gap: 80px; 
-  margin: 0 0 8px 0;
-  padding: 0;
+  justify-content: center;
+  gap: 100px;
+  margin-bottom:130px;
 }
 
-.puerta-llaves-horizontal {
+
+.llaves-y-puerta-layout {
   display: flex;
   flex-direction: row;
-  justify-content: start;
   align-items: flex-start;
-  margin: 0;
-  padding: 0;
+  justify-content: center;
+  width: 99vw;
+  max-width: 980px;
+  gap: 60px;
+  margin-top: 10px;
 }
 
 .columna-llaves {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 70px;
+  align-items: center;
+  gap: 102px;
   margin: 0;
-  padding: 0;
 }
 
 .puerta-centro-disenio {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
-  padding: 0;
-   width: 750px;
-  height: 740px;
+  width: 300px;
+  height: 480px;
 }
 
-
 .puerta-animada {
-  
   width: 750px;
   height: 800px;
   display: flex;
@@ -175,58 +68,31 @@
   transition: transform 1.3s cubic-bezier(.2,.9,.3,1); 
   will-change: transform;
   backface-visibility: hidden;
- 
 }
-
 .puerta-animada.open {
   transform: rotateY(-75deg);
 }
 
-.puerta-animada .puerta-img-disenio {
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 0 0 0 transparent;
-  background: transparent;
-  
-}
-
-
 .puerta-img-disenio {
-  width: 750px;
-  height: 800px;
+  width: 870px;
+  height: 780px;
   object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 0 0 0 transparent;
-  background: transparent;
+  border-radius: 16px;
 }
+
 
 .llave-img {
-  margin: 0;
-  padding: 0;
+  position: relative;
+  z-index: 12;
+  cursor: pointer;
+  margin: 0 auto;
 }
 
 .llave-disenio {
-    position: relative;
-  pointer-events: auto !important;
-    width: 150px;
-    height: 150px;
-    animation: girar 12s linear infinite, flotar 4s ease-in-out infinite;
-    transform-style: preserve-3d;                    
-  
-}
-
-@keyframes girar {
-    from {
-        transform: rotateY(0deg);
-    }
-    to {
-        transform: rotateY(360deg);
-    }
-}
-
-@keyframes flotar {
-    0%, 100% { transform: translateY(0) rotateY(0deg); }
-    50% { transform: translateY(-8px) rotateY(180deg); }
+  width: 120px;
+  height: 120px;
+  animation: girar 13s linear infinite, flotar 4s ease-in-out infinite;
+  object-fit: contain;
 }
 
 .llave-opaque {
@@ -237,126 +103,117 @@
 }
 
 
-@keyframes abrirLlave {
-  0% { transform: scale(1); }
-  60% { transform: scale(1.2) rotate(-6deg);}
-  100% { transform: scale(1.05) rotate(0); }
+@keyframes girar {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+@keyframes flotar {
+  0%, 100% { transform: translateY(0) rotateY(0deg); }
+  50% { transform: translateY(-12px) rotateY(180deg); }
 }
 
-.llave-opaque {
-  opacity: 0.33;
-  filter: grayscale(0.8) blur(2px);
-  pointer-events: none;
-  transition: opacity 0.28s, filter 0.28s;
+.open-door-welcome {
+  max-width: 800px;
+  margin: 0px auto 24px auto;
+  background: rgba(30, 14, 0, 0.78);
+  padding: 22px 19px 14px 19px;
+  border-radius: 13px;
+  box-shadow: 0 0 46px #d4af3718;
+  text-align: center;
+  border: 1.5px solid #ffd70055;
+  opacity: 0.99;
+  position: relative;
+  z-index: 18;
 }
 
-
-@keyframes fadeInPremio {
-  to { opacity: 1; }
+.bienvenida-titulo {
+  color: #FFD700;
+  font-size: 2.15rem;
+  font-weight: bold;
+  margin-bottom: 14px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 22px #000, 0 0 4px #ffe08244;
 }
 
-
-
-@keyframes explotarBombasCircle {
-  0%   {top: 100px; opacity: 0; transform: scale(0.4);}
-  15%  {opacity:1;transform:scale(1.15);}
-  60%  {top: 62px; opacity:1;}
-  100% {top: 0px; opacity: 0; transform:scale(0.9);}
-}
-
-
-.premio-modal-portal {
-  position: fixed;
-  inset: 0;
-  z-index: 99999; 
-  pointer-events: none; 
-}
-
-
-.confetti-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 3; 
-  pointer-events: none; 
-  display: block;
+.bienvenida-texto {
+  color: #ffe082;
+  font-size: 1.1rem;
+  line-height: 1.54;
+  font-family: 'Nunito', 'Arial', sans-serif;
 }
 
 
 .modal-portal-overlay {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  background: rgba(6,6,6,0.44); 
-  backdrop-filter: blur(2px); 
-  pointer-events: auto; 
+  z-index: 4;
+  background: rgba(30, 18, 0, 0.60);
+  backdrop-filter: blur(2.5px);
+  pointer-events: none;
 }
 
+.confetti-bg.show-bombas {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.premio-modal-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
 
 .premio-solo-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -52%);
-  min-width: 440px;
-  min-height: 300px;
+  position: relative;
+  z-index: 10;
+  min-width: 90vw;
+  max-width: 98vw;
+  min-height: 210px;
+  padding: 24px 13px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  z-index: 3; 
-  pointer-events: auto; 
+  align-items: center;
+  pointer-events: auto !important;
 }
+
+.premio-bg-img {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 12px auto;
+  border-radius: 12px;
+}
+
 .premio-solo-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: url(/src/assets/premio.png);
-  border-radius: 16px;
-  box-shadow: 0 0 110px 44px #ffd70044;
-  height: 270px;
-  width: 380px;
-  padding: 22px 35px 28px 26px;
-}
-
-.x-falla-llave {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(2.3) rotate(-18deg);
-  font-size: 2.4rem;
-  font-family: inherit;
-  color: #ff253a;
-  font-weight: 900;
-  opacity: 0.98;
-  pointer-events: none;
-  z-index: 20;
-  letter-spacing: 0.04em;
-  box-sizing: border-box;
-  mix-blend-mode: lighten;
-}
-
-.premio-solo-content {
-  min-width: 170px;
+  background: none !important;
+  padding: 0 !important;
   display: flex;
   flex-direction: column;
   align-items: center;
-  pointer-events: auto;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
 }
 
-@keyframes aparecerFelicidad {
-  0% { opacity: 0; transform: scale(0.5) rotate(-10deg);}
-  60% { opacity: 1; transform: scale(1.4) rotate(6deg);}
-  80% { opacity: 1; transform: scale(0.94) rotate(-3deg);}
-  100% { opacity: 1; transform: scale(1) rotate(0);}
-}
+
 .botones-premio {
-  margin-top: 240px;
+  margin-top: -100px;
   display: flex;
   gap: 12px;
   justify-content: center;
   pointer-events: auto;
 }
-.boton-descarga, .boton-ver {
+
+.boton-descarga,
+.boton-ver {
   background: linear-gradient(90deg, #E4C36C 0%, #946322 100%);
   border: none;
   padding: 12px 22px;
@@ -364,46 +221,45 @@
   color: #212121;
   font-weight: bold;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.08rem;
   box-shadow: 0 2px 8px #0003;
   transition: background 0.15s, transform 0.2s;
-  position: relative;
-  pointer-events: auto;
 }
-.boton-descarga:hover, .boton-ver:hover {
-  background: linear-gradient(90deg, #E4C36C 0%, #946322 100%);
+.boton-descarga:hover,
+.boton-ver:hover {
   transform: scale(1.07);
 }
 
-@media (max-width: 900px) {
 
-  .puerta-img-disenio {
-    width: 340px;
-    height: 370px;
-  }
-  .puerta-centro-disenio {
-    width: 240px;
-    height: 370px;
-  }
-  .premio-solo-row {
-    width: 270px;
-    height: 170px;
-    padding: 18px;
-  }
-  
-  .premio-solo-container {
-    min-width: 230px;
-    min-height: 180px;
-  }
-  .botones-premio {
-    margin-top: 110px;
-    flex-direction: column;
-    gap: 10px;
-  }
+.x-falla-llave {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(2.2) rotate(-18deg);
+  font-size: 2.4rem;
+  font-family: inherit;
+  color: #ff253a;
+  font-weight: 900;
+  opacity: 0.98;
 }
 
-@media (max-width: 600px) {
- 
+
+
+@media (max-width: 1024px) {
+  .llaves-y-puerta-layout {
+    max-width: 700px;
+    gap: 36px;
+  }
+  .fila-llaves { gap: 60px; margin-bottom: 44px; }
+  .puerta-centro-disenio, .puerta-img-disenio, .puerta-animada {
+    width: 350px;
+    height: 440px;
+    max-width: 90vw;
+  }
+  .llave-disenio { width: 70px; height: 70px; }
+}
+@media (max-width: 570px) {
+    
   .open-door-container {
     padding-top: 8vw;
     min-height: 100svh;
@@ -489,50 +345,14 @@
     border-radius: 7px;
   }
   .botones-premio {
-    margin-top: 230px;
+    margin-top: -90px;
     flex-direction: column;
     gap: 6px;
   }
-  .boton-descarga, .boton-ver {
+  .boton-descarga{
     font-size: 0.9rem;
     padding: 9px 16px;
-    border-radius: 7px;
+
+    
   }
-}
-
-@media (max-width: 480px) {
-
-  .form-container, 
-  .formulario-meraki, 
-  .contenedor-form, 
-  form {
-      width: 100% !important;
-      max-width: 100% !important;
-      padding-left: 12px !important;
-      padding-right: 12px !important;
-      box-sizing: border-box;
-      overflow-x: hidden;
-  }
-
-
-  input, select, textarea {
-      width: 100% !important;
-      max-width: 100% !important;
-  }
-
-
-  .campo-form {
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-  }
-   .logo-meraki {
-        width: 200px !important;
-    }
-
-  
-.premio-solo-row {
-  height: 240px;
-  width: 400px;
-}
-   
 }
