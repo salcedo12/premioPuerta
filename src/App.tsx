@@ -1,5 +1,5 @@
 import  { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Formulario from "./components/Formulario";
 import OpenDoor from "./components/OpenDoor";
 import ConsultaPremio from "./components/ConsultaPremio";
@@ -28,7 +28,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="app-contenedor">
         <Routes>
           <Route
@@ -46,7 +46,7 @@ function App() {
 
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
