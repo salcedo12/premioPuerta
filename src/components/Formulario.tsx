@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
 import logo from "../assets/LOGO2.png";
-import "../styles/Formulario.css"; 
+import "../styles/formulario.css"; 
 
 const infoTexto = (
   <div className="form-info-text">
