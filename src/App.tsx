@@ -32,15 +32,21 @@ function App() {
       <div className="app-contenedor">
         <Routes>
           <Route
-            path="/"
-            element={
-              !completado ? (
-                <Formulario onCompletado={handleCompletado} />
-              ) : (
-                <OpenDoor usuario={usuario} />
-              )
-            }
-          />
+  path="/"
+  element={
+    !completado ? (
+      <Formulario onCompletado={handleCompletado} />
+    ) : (
+      <OpenDoor
+        usuario={usuario}
+        onReiniciar={() => {
+          setCompletado(false);
+          setUsuario(null);
+        }}
+      />
+    )
+  }
+/>
           <Route path="/consulta-premio" element={<ConsultaPremio />} />
          <Route path="/participantes" element={<Participantes />} />
 

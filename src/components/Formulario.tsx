@@ -8,7 +8,7 @@ const infoTexto = (
   <div className="form-info-text">
     <h2> 🎉 Participa por tu bono de descuento</h2>
     <p style={{ textAlign:"center" }}>
-     <strong><b>🚪✨ “Abre la puerta de tu Club de Campo” 🔑🎁</b> </strong>
+     <strong><h3>🚪✨ “Abre la puerta de tu Club de Campo” 🔑🎁</h3> </strong>
     </p>
 
    
@@ -118,7 +118,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </button>
           <div className="logo-firma">
             <p>
-      <b>Al continuar, autorizas el uso de tus datos conforme a nuestra política de tratamiento de datos personales.</b>
+      <b>Al continuar, autorizas el uso de tus datos conforme a nuestra  politica de datos, consulta terminos y condiciones en el enlace. </b>
+      <a href="https://grupoconstructormeraki.com.co/politica-de-informacion/">https://grupoconstructormeraki.com.co/politica-de-informacion/</a>
     </p>
           </div>
         </form>

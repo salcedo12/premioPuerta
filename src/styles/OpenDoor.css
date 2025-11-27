@@ -26,7 +26,7 @@
   display: flex;
   justify-content: center;
   gap: 100px;
-  margin-bottom:130px;
+  margin-bottom:50px;
 }
 
 
@@ -38,14 +38,14 @@
   width: 99vw;
   max-width: 980px;
   gap: 60px;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .columna-llaves {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 102px;
+  gap: 80px;
   margin: 0;
 }
 
@@ -59,7 +59,7 @@
 
 .puerta-animada {
   width: 750px;
-  height: 800px;
+  height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,8 +74,8 @@
 }
 
 .puerta-img-disenio {
-  width: 870px;
-  height: 780px;
+  width: 670px;
+  height: 580px;
   object-fit: contain;
   border-radius: 16px;
 }
@@ -83,25 +83,25 @@
 
 .llave-img {
   position: relative;
+  display: inline-block;
   z-index: 12;
   cursor: pointer;
   margin: 0 auto;
 }
 
 .llave-disenio {
-  width: 120px;
-  height: 120px;
+    display: block;
+  width: 90px;
+  height: 90px;
   animation: girar 13s linear infinite, flotar 4s ease-in-out infinite;
   object-fit: contain;
 }
 
 .llave-opaque {
   opacity: 0.33;
-  filter: grayscale(1) blur(2px);
-  pointer-events: none;
+  filter: grayscale(1) blur(2px); /* solo a la imagen */
   transition: opacity 0.28s, filter 0.28s;
 }
-
 
 @keyframes girar {
   from { transform: rotateY(0deg); }
@@ -113,10 +113,10 @@
 }
 
 .open-door-welcome {
-  max-width: 800px;
+  width: 900px;
+  height: 160px;
   margin: 0px auto 24px auto;
   background: rgba(30, 14, 0, 0.78);
-  padding: 22px 19px 14px 19px;
   border-radius: 13px;
   box-shadow: 0 0 46px #d4af3718;
   text-align: center;
@@ -128,7 +128,7 @@
 
 .bienvenida-titulo {
   color: #FFD700;
-  font-size: 2.15rem;
+  font-size: 1.55rem;
   font-weight: bold;
   margin-bottom: 14px;
   letter-spacing: 0.05em;
@@ -211,20 +211,22 @@
   justify-content: center;
   pointer-events: auto;
 }
-
-.boton-descarga,
-.boton-ver {
-  background: linear-gradient(90deg, #E4C36C 0%, #946322 100%);
-  border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-  color: #212121;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 1.08rem;
-  box-shadow: 0 2px 8px #0003;
-  transition: background 0.15s, transform 0.2s;
+.x-falla-llave {
+  position: absolute;
+  inset: 0;                 /* ocupa todo el contenedor de la llave */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff2b2b;
+  font-size: 3rem;
+  font-weight: 900;
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  pointer-events: none;
+  z-index: 10;
 }
+
+
+
 .boton-descarga:hover,
 .boton-ver:hover {
   transform: scale(1.07);
@@ -259,9 +261,12 @@
   .llave-disenio { width: 70px; height: 70px; }
 }
 @media (max-width: 570px) {
-    
+    .open-door-welcome{
+      height: 220px;
+      width: 300px;
+    }
   .open-door-container {
-    padding-top: 8vw;
+    padding-top: 3vw;
     min-height: 100svh;
     justify-content: flex-start;
     align-items: center;
