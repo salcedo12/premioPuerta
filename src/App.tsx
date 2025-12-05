@@ -14,6 +14,7 @@ function App() {
     telefono: string;
     correo: string;
     ciudad: string;
+     terrenoInteresado: string; 
   } | null>(null);
 
   const handleCompletado = (datos: {
@@ -22,6 +23,7 @@ function App() {
     telefono: string;
     correo: string;
     ciudad: string;
+     terrenoInteresado: string; 
   }) => {
     setUsuario(datos);
     setCompletado(true);
@@ -58,42 +60,74 @@ function App() {
 
 export default App;
 
-// import { useState, useEffect } from "react";
 
-// function App() {
-//   const [, setCompletado] = useState(false);
-//   const [usuario, setUsuario] = useState<{ nombre: string; documento: string; telefono: string; correo: string; ciudad: string;} | null>(null);
 
-//   // Recupera el usuario si existe (al recargar)
-//   useEffect(() => {
-//     const datos = localStorage.getItem("usuario");
-//     if (datos) {
-//       setUsuario(JSON.parse(datos));
-//       setCompletado(true);
-//     }
-//   }, []);
+// import { useState } from "react";
+// import { HashRouter, Routes, Route } from "react-router-dom";
+// import Formulario from "./components/Formulario";
+// import OpenDoor from "./components/OpenDoor";
+// import ConsultaPremio from "./components/ConsultaPremio";
+// import Participantes from './components/Participantes';
 
-// const handleCompletado = (datos: {
-//   nombre: string;
-//   documento: string;
-//   telefono: string;
-//   correo: string;
-//   ciudad: string;
-// }) => {
-//   setUsuario(datos);
-//   setCompletado(true);
-//   localStorage.setItem("usuario", JSON.stringify(datos));
+// import "./App.css";
+
+// const usuarioMock = {
+//   nombre: "Juan Pérez",
+//   documento: "12345678",
+//   telefono: "555-1234567",
+//   correo: "juan@example.com",
+//   ciudad: "Ciudad Ejemplo",
+//   terrenoInteresado: "Terreno A",
 // };
 
+// function App() {
+//   const [completado, setCompletado] = useState(true); // Comienza en true para saltar el formulario
+//   const [usuario, setUsuario] = useState<{
+//     nombre: string;
+//     documento: string;
+//     telefono: string;
+//     correo: string;
+//     ciudad: string;
+//     terrenoInteresado: string;
+//   } | null>(usuarioMock);
+
+//   const handleCompletado = (datos: {
+//     nombre: string;
+//     documento: string;
+//     telefono: string;
+//     correo: string;
+//     ciudad: string;
+//     terrenoInteresado: string;
+//   }) => {
+//     setUsuario(datos);
+//     setCompletado(true);
+//   };
+
 //   return (
-//     <BrowserRouter>
+//     <HashRouter>
 //       <div className="app-contenedor">
 //         <Routes>
-//         <Route path="/" element={<OpenDoor usuario={usuario} />} />
+//           <Route
+//             path="/"
+//             element={
+//               !completado ? (
+//                 <Formulario onCompletado={handleCompletado} />
+//               ) : (
+//                 <OpenDoor
+//                   usuario={usuario}
+//                   onReiniciar={() => {
+//                     setCompletado(false);
+//                     setUsuario(null);
+//                   }}
+//                 />
+//               )
+//             }
+//           />
 //           <Route path="/consulta-premio" element={<ConsultaPremio />} />
+//           <Route path="/participantes" element={<Participantes />} />
 //         </Routes>
 //       </div>
-//     </BrowserRouter>
+//     </HashRouter>
 //   );
 // }
 

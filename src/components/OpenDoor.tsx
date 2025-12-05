@@ -8,34 +8,84 @@ import confetti from "canvas-confetti";
 import { AlertModal, PremioModal } from "./modales";
 import llave from "../assets/llaves.png";
 import puerta from "../assets/PUERTA1.png";
-import {FalloModal} from "./FalloModal";
+import { FalloModal } from "./FalloModal";
+import { registrarParticipante } from "../components/ParticipantesService";
 
 
-const NUM_LLAVES = 8;
-const NUM_PREMIOS = 2;
+const PREMIOS = [0, 0, 5, 10, 15, 20, 25, 30];
 
 interface Props {
   usuario: Usuario | null;
-   onReiniciar?: () => void;  
+  onReiniciar?: () => void;
 }
 
 const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
   const [, setLlaveAbierta] = useState<number | null>(null);
-  const [premio, setPremio] = useState<string | null>(null);
-  const [mostrarModal, setMostrarModal] = useState(false);
+  const [, setPremio] = useState<string | null>(null);
+
+  
+  const [mostrarModalPremioSimple, setMostrarModalPremioSimple] =
+    useState(false); 
+  const [mostrarModalDecision, setMostrarModalDecision] = useState(false); 
+  
+  const [mostrarModalPremioSegundo, setMostrarModalPremioSegundo] =
+    useState(false); 
+  const [mostrarModalDecisionSegundo, setMostrarModalDecisionSegundo] =
+    useState(false); 
+
+  const [mostrarModalPremioFinal, setMostrarModalPremioFinal] = useState(false);
+  const [mostrarModalEleccionFinal, setMostrarModalEleccionFinal] =
+    useState(false); 
+
   const [puertaAbierta, setPuertaAbierta] = useState(false);
   const [uuidPremio, setUuidPremio] = useState<string | null>(null);
   const [llavesEscogidas, setLlavesEscogidas] = useState<number[]>([]);
-  const [llavesFallidas, setLlavesFallidas] = useState<number[]>([]);
+  const [llavesOcultas, setLlavesOcultas] = useState<number[]>([]);
   const [intentos, setIntentos] = useState(0);
+  const [intentoRevancha, setIntentoRevancha] = useState(false);
+  const [llaveGanadora, setLlaveGanadora] = useState<number | null>(null);
+  const [mejorPremio, setMejorPremio] = useState<number | null>(null); 
+  const [segundoPremio, setSegundoPremio] = useState<number | null>(null); 
+  const [premioFinalConfirmado, setPremioFinalConfirmado] =
+    useState<string | null>(null);
   const [alertaVisible, setAlertaVisible] = useState(false);
   const [alertaTexto, ] = useState("");
   const [falloModalVisible, setFalloModalVisible] = useState(false);
-  const [mensajeFallo, setMensajeFallo] = useState("");
+  const [mensajeFallo, ] = useState("");
   const [intentosRestantes, setIntentosRestantes] = useState(2);
 
   const puertaRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+
+  const premiosPorLlave = useMemo(() => {
+    let copiaPremios = [...PREMIOS];
+    for (let i = copiaPremios.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copiaPremios[i], copiaPremios[j]] = [copiaPremios[j], copiaPremios[i]];
+    }
+    console.log("Premios por llave:", copiaPremios);
+    return copiaPremios;
+  }, []);
+
+  const notificarGanadorPHP = async (usuario: Usuario, premioFinal: string) => {
+    try {
+      await fetch("https://grupoconstructormeraki.com.co/notificar-ganador.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: usuario.nombre,
+          documento: usuario.documento,
+          telefono: usuario.telefono,
+          correo: usuario.correo,
+          terrenoInteresado: usuario.terrenoInteresado,
+          ciudad: usuario.ciudad,
+          premio: premioFinal,
+        }),
+      });
+    } catch (error) {
+      console.error("Error notificando al jefe:", error);
+    }
+  };
 
   useEffect(() => {
     const handler = (e: PageTransitionEvent) => {
@@ -46,7 +96,11 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
   }, []);
 
   useEffect(() => {
-    if (mostrarModal && premio === "20 Millones") {
+    if (
+      mostrarModalPremioFinal &&
+      premioFinalConfirmado &&
+      parseInt(premioFinalConfirmado) >= 0
+    ) {
       confetti({
         particleCount: 140,
         spread: 120,
@@ -74,18 +128,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
         scalar: 1.35,
       });
     }
-  }, [mostrarModal, premio]);
-
-  const premiosIndices = useMemo(() => {
-    const indices = Array.from({ length: NUM_LLAVES }, (_, i) => i);
-    return indices.sort(() => Math.random() - 0.5).slice(0, NUM_PREMIOS);
-  }, []);
-
-  const premiosPorLlave = useMemo(() => {
-    const arr = Array(NUM_LLAVES).fill("Sin suerte");
-    premiosIndices.forEach((index) => (arr[index] = "20 Millones"));
-    return arr;
-  }, [premiosIndices]);
+  }, [mostrarModalPremioFinal, premioFinalConfirmado]);
 
   const waitForDoorToOpen = (): Promise<void> =>
     new Promise((resolve) => {
@@ -113,15 +156,29 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
     setPremio(null);
   };
 
+  const registrarResultadoFinal = async (premioFinal: string) => {
+    if (!usuario) return;
+    try {
+      await registrarParticipante(usuario, premioFinal);
+    } catch (error) {
+      console.error("Error registrando participante:", error);
+    }
+  };
+
   const handleAbrirLlave = async (i: number) => {
-    if (llavesEscogidas.includes(i) || intentos >= 2 || puertaAbierta) return;
+    if (
+      llavesEscogidas.includes(i) ||
+      puertaAbierta ||
+      llavesOcultas.includes(i) ||
+      (intentos >= 2 && !intentoRevancha)
+    )
+      return;
 
     setLlaveAbierta(i);
-    setPremio(premiosPorLlave[i]);
     setPuertaAbierta(true);
-    setIntentos((prev) => prev + 1);
-    setLlavesEscogidas((prev) => [...prev, i]);
-    setIntentosRestantes((prev) => prev - 1);
+
+    const premioSeleccionado = premiosPorLlave[i];
+    setPremio(`${premioSeleccionado} Millones`);
 
     await waitForDoorToOpen();
 
@@ -131,31 +188,100 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
       return;
     }
 
-    if (premiosPorLlave[i] === "20 Millones") {
-      const nuevoUUID = crypto.randomUUID();
-      setUuidPremio(nuevoUUID);
-      await actualizarPremio(usuario.documento, "20 Millones", nuevoUUID);
-      setMostrarModal(true);
-    } else {
-      setLlavesFallidas((prev) => [...prev, i]);
+    if (!intentoRevancha) {
+      setMejorPremio(premioSeleccionado);
+      setLlaveGanadora(i);
 
-      if (intentosRestantes > 0) {
-        setMensajeFallo("¡No tuviste suerte! Intenta con otra llave.");
-        setFalloModalVisible(true);
+      if (premioSeleccionado === 0) {
+        setMostrarModalPremioSimple(false);
+        setMostrarModalDecision(true);
       } else {
-        setMensajeFallo("¡No tuviste suerte! Gracias por participar.");
-        const nuevoUUID = crypto.randomUUID();
-        setUuidPremio(nuevoUUID);
-        await actualizarPremio(usuario.documento, "No ganó nada", nuevoUUID);
-        await generarPDF(usuario, "No ganó nada", nuevoUUID);
-        setFalloModalVisible(true);
+        setMostrarModalPremioSimple(true);
+        setMostrarModalDecision(false);
+
+        setTimeout(() => {
+          setMostrarModalPremioSimple(false);
+          setMostrarModalDecision(true);
+        }, 4000);
+      }
+    } else {
+      setLlavesEscogidas((prev) => [...prev, i]);
+      setIntentos((prev) => prev + 1);
+      setIntentosRestantes(0);
+      setSegundoPremio(premioSeleccionado);
+
+      if (premioSeleccionado === 0) {
+        setMostrarModalPremioSegundo(false);
+        setMostrarModalDecisionSegundo(true);
+        setMostrarModalEleccionFinal(false);
+
+        setTimeout(() => {
+          setMostrarModalDecisionSegundo(false);
+          setMostrarModalEleccionFinal(true);
+        }, 4000);
+      } else {
+      
+        setMostrarModalPremioSegundo(true);
+        setMostrarModalEleccionFinal(false);
+
+        setTimeout(() => {
+          setMostrarModalPremioSegundo(false);
+          setMostrarModalEleccionFinal(true);
+        }, 4000);
       }
     }
   };
 
-  const handleIntentarOtraVez = () => {
-    resetPuerta();
-    setFalloModalVisible(false);
+  const mantenerPremio = async () => {
+    setMostrarModalDecision(false);
+
+    if (mejorPremio === null) return;
+    const premioFinalTexto = `${mejorPremio} Millones`;
+
+    setPremioFinalConfirmado(premioFinalTexto);
+    setMostrarModalPremioFinal(true);
+    setIntentos(2);
+    setLlavesEscogidas((prev) =>
+      llaveGanadora !== null ? [...prev, llaveGanadora] : prev
+    );
+
+    if (!usuario) return;
+
+    const nuevoUUID = crypto.randomUUID();
+    setUuidPremio(nuevoUUID);
+    await actualizarPremio(usuario.documento, premioFinalTexto, nuevoUUID);
+    await registrarResultadoFinal(premioFinalTexto);
+    await notificarGanadorPHP(usuario, premioFinalTexto);
+  };
+
+  const hacerRevancha = () => {
+    if (llaveGanadora !== null) {
+      setLlavesOcultas([llaveGanadora]);
+    }
+    setIntentoRevancha(true);
+    setMostrarModalDecision(false);
+    setLlaveAbierta(null);
+    setPuertaAbierta(false);
+    setPremio(null);
+    setIntentosRestantes(1);
+  };
+
+  const confirmarPremioFinal = async (opcion: "primero" | "segundo") => {
+    if (!usuario || mejorPremio === null || segundoPremio === null) return;
+
+    const premioElegidoNumero =
+      opcion === "primero" ? mejorPremio : segundoPremio;
+
+    const premioFinalTexto = `${premioElegidoNumero} Millones`;
+    setPremioFinalConfirmado(premioFinalTexto);
+    setMostrarModalEleccionFinal(false);
+    setMostrarModalPremioFinal(true);
+
+    const nuevoUUID = crypto.randomUUID();
+    setUuidPremio(nuevoUUID);
+    await actualizarPremio(usuario.documento, premioFinalTexto, nuevoUUID);
+    await registrarResultadoFinal(premioFinalTexto);
+    await notificarGanadorPHP(usuario, premioFinalTexto);
   };
 
   const handleDescargarRecompensa = async () => {
@@ -163,34 +289,42 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
       alert("No hay datos de usuario");
       return;
     }
-    const premioFinal = premio ? premio : "No ganó nada";
-    const nuevoUUID = crypto.randomUUID();
-    setUuidPremio(nuevoUUID);
-    await actualizarPremio(usuario.documento, premioFinal, nuevoUUID);
-    await generarPDF(usuario, premioFinal, nuevoUUID);
-  };
-
-  const handleVerRecompensa = () => {
-    if (!uuidPremio) {
-      alert("No hay código!");
+    if (!premioFinalConfirmado) {
+      alert("No hay premio para descargar");
       return;
     }
-    navigate(`/consulta-premio?codigo=${uuidPremio}`);
+
+    const nuevoUUID = uuidPremio ?? crypto.randomUUID();
+    setUuidPremio(nuevoUUID);
+
+    await actualizarPremio(usuario.documento, premioFinalConfirmado, nuevoUUID);
+    await generarPDF(usuario, premioFinalConfirmado, nuevoUUID);
   };
+
+
 
   const renderLlave = (i: number) => (
     <div
       key={i}
       className="llave-img"
       onClick={() => handleAbrirLlave(i)}
+      style={{
+        display: llavesEscogidas.includes(i) || llavesOcultas.includes(i)
+          ? "none"
+          : "block",
+        cursor: "pointer",
+      }}
     >
       <img
         src={llave}
         alt="Llave"
-        className={`llave-disenio${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
+        className={`llave-disenio${
+          llavesEscogidas.includes(i) ? " llave-opaque" : ""
+        }`}
       />
-      {llavesFallidas.includes(i) && <span className="x-falla-llave">×</span>}
-    </div>
+       
+  </div>
+   
   );
 
   const llavesRender = (
@@ -226,8 +360,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           ¿Listo para jugar? <span role="img" aria-label="diana">🎯</span>
         </h2>
         <div className="bienvenida-texto">
-          Selecciona una de las <b>llaves doradas</b> para que <strong>abras</strong> la puerta de tu
-          Club de Campo.<br />
+          Selecciona una de las <b>llaves doradas</b> para que <strong>abras</strong> la puerta de tu Club de Campo.<br />
           <h2>👉 Tienes dos oportunidades </h2>
         </div>
       </div>
@@ -238,29 +371,130 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
       </div>
 
       {alertaVisible && (
-        <AlertModal mensaje={alertaTexto} onClose={() => setAlertaVisible(false)} />
+        <AlertModal
+          mensaje={alertaTexto}
+          onClose={() => setAlertaVisible(false)}
+        />
       )}
 
-    {falloModalVisible && (
-  <FalloModal
-    mensaje={mensajeFallo}
-    intentosRestantes={intentosRestantes}
-    onClose={() => {
-      setFalloModalVisible(false);
-      if (onReiniciar) {
-        onReiniciar();        
-      }
-      navigate("/");          
-    }}
-    onIntentarOtraVez={intentosRestantes > 0 ? handleIntentarOtraVez : undefined}
-  />
-)}
+      {falloModalVisible && (
+        <FalloModal
+          mensaje={mensajeFallo}
+          intentosRestantes={intentosRestantes}
+          onClose={() => {
+            setFalloModalVisible(false);
+            if (onReiniciar) onReiniciar();
+            navigate("/");
+          }}
+          onIntentarOtraVez={
+            intentosRestantes > 0
+              ? () => {
+                  resetPuerta();
+                  setFalloModalVisible(false);
+                }
+              : undefined
+          }
+        />
+      )}
 
-      {mostrarModal && (
+      {mostrarModalPremioSimple && mejorPremio !== null && mejorPremio > 0 && (
         <PremioModal
-          premio={premio ?? ""}
+          premio={`${mejorPremio} Millones`}
+          modo="intento"
+          onClose={() => setMostrarModalPremioSimple(false)}
+        />
+      )}
+
+      {mostrarModalDecision && mejorPremio !== null && (
+        <AlertModal
+          mensaje={
+            mejorPremio === 0
+              ? [
+                  "Esta vez no has ganado nada.",
+                  "",
+                  "¿Quieres intentar una revancha?",
+                ]
+              : [
+                  `¡Has ganado ${mejorPremio} Millones!`,
+                  "",
+                  "¿Quieres mantener tu premio o intentar una revancha?",
+                ]
+          }
+          actions={
+            mejorPremio === 0
+              ? [
+                  {
+                    label: "Revancha",
+                    onClick: hacerRevancha,
+                  },
+                ]
+              : [
+                  {
+                    label: "Mantener premio",
+                    onClick: mantenerPremio,
+                  },
+                  {
+                    label: "Revancha",
+                    onClick: hacerRevancha,
+                  },
+                ]
+          }
+          onClose={() => setMostrarModalDecision(false)}
+        />
+      )}
+
+      {mostrarModalPremioSegundo && segundoPremio !== null && segundoPremio > 0 && (
+        <PremioModal
+          premio={`${segundoPremio} Millones`}
+          modo="intento"
+          onClose={() => setMostrarModalPremioSegundo(false)}
+        />
+      )}
+
+      {mostrarModalDecisionSegundo && segundoPremio === 0 && (
+        <AlertModal
+          mensaje={[
+            "En la revancha no has ganado nada.",
+            "",
+            "En unos segundos podrás elegir con qué premio quedarte.",
+          ]}
+          actions={[]}
+          onClose={() => setMostrarModalDecisionSegundo(false)}
+        />
+      )}
+
+      {mostrarModalEleccionFinal &&
+        mejorPremio !== null &&
+        segundoPremio !== null && (
+          <AlertModal
+            mensaje={[
+              `Primer intento: ${mejorPremio} Millones`,
+              `Segundo intento: ${segundoPremio} Millones`,
+              "",
+              "¿Qué premio quieres redimir?",
+            ]}
+            actions={[
+              {
+                label: `Quedarme con ${mejorPremio}M`,
+                onClick: () => confirmarPremioFinal("primero"),
+              },
+              {
+                label: `Quedarme con ${segundoPremio}M`,
+                onClick: () => confirmarPremioFinal("segundo"),
+              },
+            ]}
+          />
+        )}
+
+      {mostrarModalPremioFinal && premioFinalConfirmado && (
+        <PremioModal
+          premio={premioFinalConfirmado}
+          modo="final"
           onDescargar={handleDescargarRecompensa}
-          onVer={handleVerRecompensa}
+          onClose={() => {
+            setMostrarModalPremioFinal(false);
+            if (onReiniciar) onReiniciar();
+          }}
         />
       )}
     </div>

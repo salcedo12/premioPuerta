@@ -1,7 +1,34 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { consultarPremioPorUUID } from "../components/PremioService";
-import bono from "../assets/bono.png";
+import bono5 from "../assets/BONO5.jpg";
+import bono10 from "../assets/BONO10.jpg";
+import bono15 from "../assets/BONO15.jpg";
+import bono20 from "../assets/BONO20.png";
+import bono25 from "../assets/BONO25.jpg";
+import bono30 from "../assets/BONO30.jpg";
+
+function getBonoImage(premio: string | undefined) {
+  if (!premio) return bono5;
+  const numero = parseInt(premio); // "15 Millones" -> 15
+
+  switch (numero) {
+    case 5:
+      return bono5;
+    case 10:
+      return bono10;
+    case 15:
+      return bono15;
+    case 20:
+      return bono20;
+    case 25:
+      return bono25;
+    case 30:
+      return bono30;
+    default:
+      return bono5;
+  }
+}
 
 const ConsultaPremio = () => {
   const [searchParams] = useSearchParams();
@@ -14,11 +41,21 @@ const ConsultaPremio = () => {
     }
   }, [codigo]);
 
-  if (resultado === null) return <p style={{ color: "#fff" }}>Cargando...</p>;
-  if (!resultado) return <p style={{ color: "#fff" }}>No se encontró ningún premio con ese código QR.</p>;
+  if (resultado === null)
+    return <p style={{ color: "#fff" }}>Cargando...</p>;
+
+  if (!resultado)
+    return (
+      <p style={{ color: "#fff" }}>
+        No se encontró ningún premio con ese código QR.
+      </p>
+    );
+
+  const imagenBono = getBonoImage(resultado.premio);
 
   return (
-    <div className="consulta-container"
+    <div
+      className="consulta-container"
       style={{
         width: "100vw",
         minHeight: "100vh",
@@ -28,24 +65,31 @@ const ConsultaPremio = () => {
         justifyContent: "center",
       }}
     >
-      <div style={{
-        position: "relative",
-        width: 490,
+      <div
+        style={{
+          position: "relative",
+          width: 490,
+          maxWidth: "97vw",
+          minHeight: 320,
+          height: "auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: 19,
+        }}
+      >
+        <img
+          src={imagenBono}
+          alt="Bono de descuento"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: 18,
+            boxShadow: "0 0 36px 5px #d4af37",
+          }}
+        />
 
-        maxWidth: "97vw",
-        minHeight: 320,
-        height:"auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 19,
-     
-      }}>
-     <img src={bono} alt="Bono de descuento" style={{
-          width: "100%", height: "100%", objectFit: "cover",
-          borderRadius: 18, boxShadow: "0 0 36px 5px #d4af37"
-        }} />
- 
         <div
           style={{
             position: "absolute",
@@ -53,13 +97,12 @@ const ConsultaPremio = () => {
             left: 0,
             width: "100%",
             transform: "translateY(-10%) translateX(-5%)",
-        
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 3,
-            padding: "0 18px"
+            padding: "0 18px",
           }}
         >
           <div
@@ -68,7 +111,7 @@ const ConsultaPremio = () => {
               fontWeight: "bold",
               fontSize: "1rem",
               margin: "8px 0 8px 0",
-              textShadow: "1px 1px 6px #000"
+              textShadow: "1px 1px 6px #000",
             }}
           >
             Nombre: {resultado.nombre}
@@ -78,7 +121,7 @@ const ConsultaPremio = () => {
               color: "#fff",
               fontWeight: "bold",
               fontSize: ".97rem",
-              margin: "4px 0 8px 0"
+              margin: "4px 0 8px 0",
             }}
           >
             Documento: {resultado.documento}
@@ -88,10 +131,13 @@ const ConsultaPremio = () => {
               color: "#fff",
               fontSize: ".96rem",
               fontFamily: "monospace",
-              margin: "4px 0 8px 0"
+              margin: "4px 0 8px 0",
             }}
           >
-            Fecha: {resultado.fecha && resultado.fecha.toDate ? resultado.fecha.toDate().toLocaleString() : String(resultado.fecha)}
+            Fecha:{" "}
+            {resultado.fecha && resultado.fecha.toDate
+              ? resultado.fecha.toDate().toLocaleString()
+              : String(resultado.fecha)}
           </div>
         </div>
       </div>

@@ -205,7 +205,7 @@
 
 
 .botones-premio {
-  margin-top: -100px;
+  margin-top: -140px;
   display: flex;
   gap: 12px;
   justify-content: center;
@@ -225,7 +225,48 @@
   z-index: 10;
 }
 
+.open-door-alert-modal {
+  position: fixed;
+  inset: 0;                   /* top:0; right:0; bottom:0; left:0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;              /* por encima de todo */
+}
 
+.open-door-alert-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.open-door-alert-box {
+  position: relative;
+  z-index: 10000;
+  background: #1f1f1f;
+  color: #fff;
+  padding: 24px 32px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.open-door-alert-actions {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.open-door-alert-btn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ffd200, #d9a500);
+  font-weight: 600;
+}
 
 .boton-descarga:hover,
 .boton-ver:hover {
