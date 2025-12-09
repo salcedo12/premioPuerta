@@ -29,14 +29,14 @@ const Participantes: React.FC = () => {
       ...doc.data(),
     })) as Participante[];
 
-    // 1) Ordenar por fecha DESC (más reciente primero)
+   
     const ordenados = docs.sort((a, b) => {
       const fechaA = a.fecha ? a.fecha.seconds : 0;
       const fechaB = b.fecha ? b.fecha.seconds : 0;
       return fechaB - fechaA;
     });
 
-    // 2) Quedarse solo con la jugada más reciente por documento (cédula)
+  
     const vistos = new Set<string>();
     const unicosPorDocumento: Participante[] = [];
 
