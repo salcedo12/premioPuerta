@@ -9,10 +9,7 @@ interface Participante {
   nombre: string;
   documento: string;
   telefono: string;
-  correo: string;
-  terrenoInteresado: string;
   premio: string;
-  ciudad: string;
   fecha?: { seconds: number; nanoseconds: number };
 }
 
@@ -71,10 +68,7 @@ const Participantes: React.FC = () => {
       Nombre: p.nombre ?? "",
       Documento: p.documento ?? "",
       Teléfono: p.telefono ?? "",
-      Correo: p.correo ?? "",
-      "Terreno Interesado": p.terrenoInteresado ?? "",
       Premio: p.premio ?? "",
-      Ciudad: p.ciudad ?? "",
       Fecha:
         p.fecha && typeof p.fecha === "object"
           ? new Date(p.fecha.seconds * 1000).toLocaleString()
@@ -136,10 +130,7 @@ const Participantes: React.FC = () => {
                 <th>Nombre</th>
                 <th>Documento</th>
                 <th>Teléfono</th>
-                <th>Correo</th>
-                <th>Terreno Interesado</th>
                 <th>Premio</th>
-                <th>Ciudad</th>
                 <th>Fecha</th>
               </tr>
             </thead>
@@ -149,10 +140,8 @@ const Participantes: React.FC = () => {
                   <td>{p.nombre ?? ""}</td>
                   <td>{p.documento ?? ""}</td>
                   <td>{p.telefono ?? ""}</td>
-                  <td>{p.correo ?? ""}</td>
-                  <td>{p.terrenoInteresado ?? ""}</td>
                   <td>{p.premio ?? ""}</td>
-                  <td>{p.ciudad ?? ""}</td>
+        
                   <td>
                     {p.fecha && typeof p.fecha === "object"
                       ? new Date(p.fecha.seconds * 1000).toLocaleString()

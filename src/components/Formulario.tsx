@@ -21,9 +21,6 @@ interface FormData {
   nombre: string;
   documento: string;
   telefono: string;
-  correo: string;
-  terrenoInteresado: string;
-  ciudad: string;
 }
 interface Props {
   onCompletado: (datos: FormData) => void;
@@ -33,9 +30,6 @@ const Formulario: React.FC<Props> = ({ onCompletado }) => {
     nombre: "",
     documento: "",
     telefono: "",
-    correo: "",
-    terrenoInteresado: "",
-    ciudad: "",
   });
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -47,7 +41,7 @@ const Formulario: React.FC<Props> = ({ onCompletado }) => {
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
     setError("");
-    if (!form.nombre || !form.documento || !form.telefono || !form.correo || !form.terrenoInteresado || !form.ciudad) {
+    if (!form.nombre || !form.documento || !form.telefono) {
       setError("Por favor, completa todos los campos.");
       return;
     }
@@ -95,20 +89,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               <div className="campo">
                 <label>Teléfono</label>
                 <input type="tel" name="telefono" placeholder="Número de contacto" value={form.telefono} onChange={handleChange} />
-              </div>
-            </div>
-            <div className="inputs-col">
-              <div className="campo">
-                <label>Correo electrónico</label>
-                <input type="email" name="correo" placeholder="tu@correo.com" value={form.correo} onChange={handleChange} />
-              </div>
-              <div className="campo">
-                <label>¿Qué club de campo te interesa?</label>
-                <input type="text" name="terrenoInteresado" placeholder="Melgar, Mariquita, Alvarado" value={form.terrenoInteresado} onChange={handleChange} />
-              </div>
-              <div className="campo">
-                <label>Ciudad</label>
-                <input type="text" name="ciudad" placeholder="Ciudad de residencia" value={form.ciudad} onChange={handleChange} />
               </div>
             </div>
           </div>

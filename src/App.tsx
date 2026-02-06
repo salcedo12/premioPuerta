@@ -12,18 +12,13 @@ function App() {
     nombre: string;
     documento: string;
     telefono: string;
-    correo: string;
-    ciudad: string;
-     terrenoInteresado: string; 
   } | null>(null);
 
   const handleCompletado = (datos: {
     nombre: string;
     documento: string;
     telefono: string;
-    correo: string;
-    ciudad: string;
-     terrenoInteresado: string; 
+
   }) => {
     setUsuario(datos);
     setCompletado(true);

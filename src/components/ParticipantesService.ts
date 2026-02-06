@@ -12,10 +12,7 @@ export const registrarParticipante = async (
     nombre: usuario.nombre,
     documento: usuario.documento,
     telefono: usuario.telefono,
-    correo: usuario.correo,
-    terrenoInteresado: usuario.terrenoInteresado,
     premio,
-    ciudad: usuario.ciudad,
     fecha: serverTimestamp(),
   });
 };

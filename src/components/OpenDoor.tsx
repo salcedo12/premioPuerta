@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../styles/OpenDoor.css";
 import { generarPDF } from "../components/GenerarPdf";
 import { actualizarPremio } from "../components/PremioService";
@@ -11,61 +11,84 @@ import puerta from "../assets/PUERTA1.png";
 import { FalloModal } from "./FalloModal";
 import { registrarParticipante } from "../components/ParticipantesService";
 
-
-const PREMIOS = [0, 0, 5, 10, 15, 20, 25, 30];
-
 interface Props {
   usuario: Usuario | null;
   onReiniciar?: () => void;
 }
 
+
+const shuffleInPlace = (arr: number[]) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+const generarPremiosPrimerIntento = () => {
+  const premios = [0, 0, 0, 0, 0, 0, 5, 5]; 
+  return shuffleInPlace(premios);
+};
+
+
+const generarPremiosRevancha = () => {
+  const premios = [25, 25, 25, 25, 30, 30, 30, 30]; 
+  return shuffleInPlace(premios);
+};
+
 const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
   const [, setLlaveAbierta] = useState<number | null>(null);
   const [, setPremio] = useState<string | null>(null);
 
-  
   const [mostrarModalPremioSimple, setMostrarModalPremioSimple] =
-    useState(false); 
-  const [mostrarModalDecision, setMostrarModalDecision] = useState(false); 
-  
+    useState(false);
+  const [mostrarModalDecision, setMostrarModalDecision] = useState(false);
+
   const [mostrarModalPremioSegundo, setMostrarModalPremioSegundo] =
-    useState(false); 
+    useState(false);
   const [mostrarModalDecisionSegundo, setMostrarModalDecisionSegundo] =
-    useState(false); 
+    useState(false);
 
   const [mostrarModalPremioFinal, setMostrarModalPremioFinal] = useState(false);
   const [mostrarModalEleccionFinal, setMostrarModalEleccionFinal] =
-    useState(false); 
+    useState(false);
 
   const [puertaAbierta, setPuertaAbierta] = useState(false);
   const [uuidPremio, setUuidPremio] = useState<string | null>(null);
+
   const [llavesEscogidas, setLlavesEscogidas] = useState<number[]>([]);
   const [llavesOcultas, setLlavesOcultas] = useState<number[]>([]);
+
   const [intentos, setIntentos] = useState(0);
   const [intentoRevancha, setIntentoRevancha] = useState(false);
-  const [llaveGanadora, setLlaveGanadora] = useState<number | null>(null);
-  const [mejorPremio, setMejorPremio] = useState<number | null>(null); 
-  const [segundoPremio, setSegundoPremio] = useState<number | null>(null); 
+
+  const [, setLlaveGanadora] = useState<number | null>(null);
+  const [mejorPremio, setMejorPremio] = useState<number | null>(null);
+  const [segundoPremio, setSegundoPremio] = useState<number | null>(null);
+
   const [premioFinalConfirmado, setPremioFinalConfirmado] =
     useState<string | null>(null);
+
   const [alertaVisible, setAlertaVisible] = useState(false);
-  const [alertaTexto, ] = useState("");
+  const [alertaTexto] = useState("");
   const [falloModalVisible, setFalloModalVisible] = useState(false);
-  const [mensajeFallo, ] = useState("");
+  const [mensajeFallo] = useState("");
   const [intentosRestantes, setIntentosRestantes] = useState(2);
 
   const puertaRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
-  const premiosPorLlave = useMemo(() => {
-    let copiaPremios = [...PREMIOS];
-    for (let i = copiaPremios.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copiaPremios[i], copiaPremios[j]] = [copiaPremios[j], copiaPremios[i]];
-    }
-    console.log("Premios por llave:", copiaPremios);
-    return copiaPremios;
-  }, []);
+
+  const [premiosPorLlave, setPremiosPorLlave] = useState<number[]>(
+    () => generarPremiosPrimerIntento()
+  );
+
+
+  useEffect(() => {
+    setPremiosPorLlave(
+      intentoRevancha ? generarPremiosRevancha() : generarPremiosPrimerIntento()
+    );
+  }, [intentoRevancha]);
 
   const notificarGanadorPHP = async (usuario: Usuario, premioFinal: string) => {
     try {
@@ -76,9 +99,6 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           nombre: usuario.nombre,
           documento: usuario.documento,
           telefono: usuario.telefono,
-          correo: usuario.correo,
-          terrenoInteresado: usuario.terrenoInteresado,
-          ciudad: usuario.ciudad,
           premio: premioFinal,
         }),
       });
@@ -144,7 +164,9 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           resolve();
         }
       };
-      el.addEventListener("transitionend", onEnd as EventListener, { once: true });
+      el.addEventListener("transitionend", onEnd as EventListener, {
+        once: true,
+      });
       setTimeout(() => {
         if (!finished) resolve();
       }, 2000);
@@ -205,30 +227,19 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
         }, 4000);
       }
     } else {
+    
       setLlavesEscogidas((prev) => [...prev, i]);
       setIntentos((prev) => prev + 1);
       setIntentosRestantes(0);
       setSegundoPremio(premioSeleccionado);
 
-      if (premioSeleccionado === 0) {
+      setMostrarModalPremioSegundo(true);
+      setMostrarModalEleccionFinal(false);
+
+      setTimeout(() => {
         setMostrarModalPremioSegundo(false);
-        setMostrarModalDecisionSegundo(true);
-        setMostrarModalEleccionFinal(false);
-
-        setTimeout(() => {
-          setMostrarModalDecisionSegundo(false);
-          setMostrarModalEleccionFinal(true);
-        }, 4000);
-      } else {
-      
-        setMostrarModalPremioSegundo(true);
-        setMostrarModalEleccionFinal(false);
-
-        setTimeout(() => {
-          setMostrarModalPremioSegundo(false);
-          setMostrarModalEleccionFinal(true);
-        }, 4000);
-      }
+        setMostrarModalEleccionFinal(true);
+      }, 4000);
     }
   };
 
@@ -241,9 +252,6 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
     setPremioFinalConfirmado(premioFinalTexto);
     setMostrarModalPremioFinal(true);
     setIntentos(2);
-    setLlavesEscogidas((prev) =>
-      llaveGanadora !== null ? [...prev, llaveGanadora] : prev
-    );
 
     if (!usuario) return;
 
@@ -255,15 +263,17 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
   };
 
   const hacerRevancha = () => {
-    if (llaveGanadora !== null) {
-      setLlavesOcultas([llaveGanadora]);
-    }
-    setIntentoRevancha(true);
     setMostrarModalDecision(false);
-    setLlaveAbierta(null);
+
+    setLlavesEscogidas([]);
+    setLlavesOcultas([]); 
     setPuertaAbierta(false);
+    setLlaveAbierta(null);
     setPremio(null);
+    setIntentos(0);
     setIntentosRestantes(1);
+
+    setIntentoRevancha(true);
   };
 
   const confirmarPremioFinal = async (opcion: "primero" | "segundo") => {
@@ -301,38 +311,48 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
     await generarPDF(usuario, premioFinalConfirmado, nuevoUUID);
   };
 
+  const renderLlave = (i: number) => {
+    const hidden = llavesEscogidas.includes(i) || llavesOcultas.includes(i);
+    if (hidden) return null;
 
+      const valor = premiosPorLlave[i];
 
-  const renderLlave = (i: number) => (
-    <div
-      key={i}
-      className="llave-img"
-      onClick={() => handleAbrirLlave(i)}
-      style={{
-        display: llavesEscogidas.includes(i) || llavesOcultas.includes(i)
-          ? "none"
-          : "block",
-        cursor: "pointer",
-      }}
-    >
-      <img
-        src={llave}
-        alt="Llave"
-        className={`llave-disenio${
-          llavesEscogidas.includes(i) ? " llave-opaque" : ""
-        }`}
-      />
-       
-  </div>
-   
-  );
+    return (
+      <div
+        key={i}
+        className="llave-wrapper"
+        onClick={() => handleAbrirLlave(i)}
+        style={{
+          display: "block",
+          cursor: "pointer",
+          position: "relative",
+          zIndex: 50,
+          pointerEvents: "auto",
+        }}
+      >
+         <div className="llave-label">
+        {valor}M
+      </div>
+        <img
+          src={llave}
+          alt="Llave"
+          className={`llave-disenio${llavesEscogidas.includes(i) ? " llave-opaque" : ""}`}
+        />
+      </div>
+    );
+  };
 
   const llavesRender = (
-    <div className="llaves-y-puerta-layout">
-      <div className="columna-llaves columna-izquierda">
+    <div className="llaves-y-puerta-layout" style={{ position: "relative" }}>
+      <div className="columna-llaves columna-izquierda" style={{ zIndex: 50 }}>
         {[0, 1, 2].map(renderLlave)}
       </div>
-      <div className="puerta-centro-disenio">
+
+   
+      <div
+        className="puerta-centro-disenio"
+        style={{ pointerEvents: "none", zIndex: 1 }}
+      >
         <div
           ref={puertaRef}
           className={`puerta-animada ${puertaAbierta ? "open" : ""}`}
@@ -341,14 +361,16 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           <img src={puerta} className="puerta-img-disenio" alt="Puerta" />
         </div>
       </div>
-      <div className="columna-llaves columna-derecha">
+
+      <div className="columna-llaves columna-derecha" style={{ zIndex: 50 }}>
         {[3, 4, 5].map(renderLlave)}
       </div>
     </div>
   );
 
+
   const llavesArribaRender = (
-    <div className="fila-llaves fila-superior">
+    <div className="fila-llaves fila-superior" style={{ zIndex: 50 }}>
       {[6, 7].map(renderLlave)}
     </div>
   );
@@ -356,12 +378,12 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
   return (
     <div className="open-door-container">
       <div className="open-door-welcome">
-        <h2 className="bienvenida-titulo">
-          ¿Listo para jugar? <span role="img" aria-label="diana">🎯</span>
-        </h2>
+        <h2 className="bienvenida-titulo">¿Listo para jugar?</h2>
         <div className="bienvenida-texto">
-          Selecciona una de las <b>llaves doradas</b> para que <strong>abras</strong> la puerta de tu Club de Campo.<br />
-          <h2>👉 Tienes dos oportunidades </h2>
+          Selecciona una de las <b>llaves doradas</b> para que <strong>abras</strong>{" "}
+          la puerta de tu Club de Campo.
+          <br />
+          <h2>👉 Tienes dos oportunidades</h2>
         </div>
       </div>
 
@@ -371,10 +393,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
       </div>
 
       {alertaVisible && (
-        <AlertModal
-          mensaje={alertaTexto}
-          onClose={() => setAlertaVisible(false)}
-        />
+        <AlertModal mensaje={alertaTexto} onClose={() => setAlertaVisible(false)} />
       )}
 
       {falloModalVisible && (
@@ -409,11 +428,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
         <AlertModal
           mensaje={
             mejorPremio === 0
-              ? [
-                  "Esta vez no has ganado nada.",
-                  "",
-                  "¿Quieres intentar una revancha?",
-                ]
+              ? ["Esta vez no has ganado nada.", "", "¿Quieres intentar una revancha?"]
               : [
                   `¡Has ganado ${mejorPremio} Millones!`,
                   "",
@@ -422,21 +437,10 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           }
           actions={
             mejorPremio === 0
-              ? [
-                  {
-                    label: "Revancha",
-                    onClick: hacerRevancha,
-                  },
-                ]
+              ? [{ label: "Revancha", onClick: hacerRevancha }]
               : [
-                  {
-                    label: "Mantener premio",
-                    onClick: mantenerPremio,
-                  },
-                  {
-                    label: "Revancha",
-                    onClick: hacerRevancha,
-                  },
+                  { label: "Mantener premio", onClick: mantenerPremio },
+                  { label: "Revancha", onClick: hacerRevancha },
                 ]
           }
           onClose={() => setMostrarModalDecision(false)}
@@ -463,28 +467,20 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
         />
       )}
 
-      {mostrarModalEleccionFinal &&
-        mejorPremio !== null &&
-        segundoPremio !== null && (
-          <AlertModal
-            mensaje={[
-              `Primer intento: ${mejorPremio} Millones`,
-              `Segundo intento: ${segundoPremio} Millones`,
-              "",
-              "¿Qué premio quieres redimir?",
-            ]}
-            actions={[
-              {
-                label: `Quedarme con ${mejorPremio}M`,
-                onClick: () => confirmarPremioFinal("primero"),
-              },
-              {
-                label: `Quedarme con ${segundoPremio}M`,
-                onClick: () => confirmarPremioFinal("segundo"),
-              },
-            ]}
-          />
-        )}
+      {mostrarModalEleccionFinal && mejorPremio !== null && segundoPremio !== null && (
+        <AlertModal
+          mensaje={[
+            `Primer intento: ${mejorPremio} Millones`,
+            `Segundo intento: ${segundoPremio} Millones`,
+            "",
+            "¿Qué premio quieres redimir?",
+          ]}
+          actions={[
+            { label: `Quedarme con ${mejorPremio}M`, onClick: () => confirmarPremioFinal("primero") },
+            { label: `Quedarme con ${segundoPremio}M`, onClick: () => confirmarPremioFinal("segundo") },
+          ]}
+        />
+      )}
 
       {mostrarModalPremioFinal && premioFinalConfirmado && (
         <PremioModal

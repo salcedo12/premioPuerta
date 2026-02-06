@@ -26,9 +26,6 @@ export const notificarGanador = onDocumentCreated(
             <li>Nombre: ${data.nombre}</li>
             <li>Documento: ${data.documento}</li>
             <li>Teléfono: ${data.telefono}</li>
-            <li>Correo: ${data.correo}</li>
-            <li>Terreno: ${data.terrenoInteresado}</li>
-            <li>Ciudad: ${data.ciudad}</li>
             <li>Premio: ${data.premio}</li>
           </ul>
         `,
