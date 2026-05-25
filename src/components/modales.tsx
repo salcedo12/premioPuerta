@@ -6,7 +6,8 @@ import premio15 from "../assets/premio15.jpg";
 import premio20 from "../assets/premio20.jpg";
 import premio25 from "../assets/premio25.jpg";
 import premio30 from "../assets/premio30.jpg";
-
+import premio35 from "../assets/premio35.jpg";
+import premio40 from "../assets/premio40.jpg";
 type ModalAction = {
   label: string;
   onClick: () => void;
@@ -36,6 +37,10 @@ function getPremioImage(premio: string) {
       return premio25;
     case "30 Millones":
       return premio30;
+    case "35 Millones":
+      return premio35;
+    case "40 Millones":
+      return premio40;
     default:
       return premio5;
   }

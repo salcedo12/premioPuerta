@@ -26,13 +26,13 @@ const shuffleInPlace = (arr: number[]) => {
 };
 
 const generarPremiosPrimerIntento = () => {
-  const premios = [0, 0, 0, 0, 0, 0, 5, 5]; 
+  const premios = [10, 10, 10, 10, 5, 5, 5, 5];
   return shuffleInPlace(premios);
 };
 
 
 const generarPremiosRevancha = () => {
-  const premios = [25, 25, 25, 25, 30, 30, 30, 30]; 
+  const premios = [40, 40, 40, 40, 40, 40, 40, 40];
   return shuffleInPlace(premios);
 };
 
@@ -227,7 +227,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
         }, 4000);
       }
     } else {
-    
+
       setLlavesEscogidas((prev) => [...prev, i]);
       setIntentos((prev) => prev + 1);
       setIntentosRestantes(0);
@@ -266,7 +266,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
     setMostrarModalDecision(false);
 
     setLlavesEscogidas([]);
-    setLlavesOcultas([]); 
+    setLlavesOcultas([]);
     setPuertaAbierta(false);
     setLlaveAbierta(null);
     setPremio(null);
@@ -315,7 +315,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
     const hidden = llavesEscogidas.includes(i) || llavesOcultas.includes(i);
     if (hidden) return null;
 
-      const valor = premiosPorLlave[i];
+
 
     return (
       <div
@@ -330,9 +330,9 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           pointerEvents: "auto",
         }}
       >
-         <div className="llave-label">
-        {valor}M
-      </div>
+        <div className="llave-label">
+          {/* {valor}M */}
+        </div>
         <img
           src={llave}
           alt="Llave"
@@ -348,7 +348,7 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
         {[0, 1, 2].map(renderLlave)}
       </div>
 
-   
+
       <div
         className="puerta-centro-disenio"
         style={{ pointerEvents: "none", zIndex: 1 }}
@@ -408,9 +408,9 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
           onIntentarOtraVez={
             intentosRestantes > 0
               ? () => {
-                  resetPuerta();
-                  setFalloModalVisible(false);
-                }
+                resetPuerta();
+                setFalloModalVisible(false);
+              }
               : undefined
           }
         />
@@ -430,18 +430,18 @@ const OpenDoor: React.FC<Props> = ({ usuario, onReiniciar }) => {
             mejorPremio === 0
               ? ["Esta vez no has ganado nada.", "", "¿Quieres intentar una revancha?"]
               : [
-                  `¡Has ganado ${mejorPremio} Millones!`,
-                  "",
-                  "¿Quieres mantener tu premio o intentar una revancha?",
-                ]
+                `¡Has ganado ${mejorPremio} Millones!`,
+                "",
+                "¿Quieres mantener tu premio o intentar una revancha?",
+              ]
           }
           actions={
             mejorPremio === 0
               ? [{ label: "Revancha", onClick: hacerRevancha }]
               : [
-                  { label: "Mantener premio", onClick: mantenerPremio },
-                  { label: "Revancha", onClick: hacerRevancha },
-                ]
+                { label: "Mantener premio", onClick: mantenerPremio },
+                { label: "Revancha", onClick: hacerRevancha },
+              ]
           }
           onClose={() => setMostrarModalDecision(false)}
         />

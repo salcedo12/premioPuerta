@@ -213,7 +213,7 @@
 }
 .x-falla-llave {
   position: absolute;
-  inset: 0;                 /* ocupa todo el contenedor de la llave */
+  inset: 0;                 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +267,9 @@
   background: linear-gradient(90deg, #ffd200, #d9a500);
   font-weight: 600;
 }
-
+.boton-descarga{
+  margin-top: 50px;
+}
 .boton-descarga:hover,
 .boton-ver:hover {
   transform: scale(1.07);
@@ -396,6 +398,7 @@
     gap: 6px;
   }
   .boton-descarga{
+    margin-top: 6px;
     font-size: 0.9rem;
     padding: 9px 16px;
 

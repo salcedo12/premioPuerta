@@ -98,9 +98,18 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </button>
           <div className="logo-firma">
             <p>
-      <b>Al continuar, autorizas el uso de tus datos conforme a nuestra  politica de datos, consulta terminos y condiciones en el enlace. </b>
-      <a href="https://grupoconstructormeraki.com.co/politica-de-informacion/">https://grupoconstructormeraki.com.co/politica-de-informacion/</a>
-    </p>
+              <b>
+                Al continuar, autorizo a Grupo Constructor Meraki al tratamiento de mis datos personales y a contactarme con información comercial. Consulta la política de datos y los términos y condiciones.
+              </b>
+            </p>
+            <div className="legal-links">
+              <a href="https://grupoconstructormeraki.com.co/politica-de-privacidad" target="_blank" rel="noreferrer">
+                Política de privacidad
+              </a>
+              <a href="https://grupoconstructormeraki.com.co/terminos-y-condiciones" target="_blank" rel="noreferrer">
+                Términos y condiciones
+              </a>
+            </div>
           </div>
         </form>
       </div>

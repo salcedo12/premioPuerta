@@ -2,13 +2,16 @@ import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import type { Usuario } from "../types";
 
-// Fondos por premio
+
 import bono5 from "../assets/BONO5.jpg";
 import bono10 from "../assets/BONO10.jpg";
 import bono15 from "../assets/BONO15.jpg";
 import bono20 from "../assets/BONO20.png";
 import bono25 from "../assets/BONO25.jpg";
 import bono30 from "../assets/BONO30.jpg";
+import bono35 from "../assets/BONO35.jpg";
+import bono40 from "../assets/BONO40.jpg";
+
 
 const BASE_URL = "https://puertabono.grupoconstructormeraki.com.co/#";
 
@@ -29,6 +32,11 @@ function getFondoPorPremio(premio: string) {
       return bono25;
     case 30:
       return bono30;
+    case 35:
+      return bono35;
+    case 40:
+      return bono40;
+    
     default:
       return bono5; 
   }

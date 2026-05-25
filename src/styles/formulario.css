@@ -134,6 +134,22 @@ button:disabled {
   text-align: center;
 }
 
+.logo-firma p {
+  margin-bottom: 8px;
+}
+
+.legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.legal-links a {
+  color: #4d5cff;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
 
 @media (max-width: 950px) {
   .form-info-text,
